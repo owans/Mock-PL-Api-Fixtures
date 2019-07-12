@@ -5,8 +5,6 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../server');
 const should = chai.should();
-const status = require('../app/helpers/statuses');
-const messages = require('../app/helpers/messages');
 
 chai.use(chaiHttp);
 should;
@@ -33,7 +31,7 @@ describe('Team', () => {
                 .post('/api/v1/team/add')
                 .send(team)
                 .end((err, res) => {
-                    res.should.have.status(status.unauthorized);
+                    res.should.have.status("not authorized");
                     res.body.should.be.a('object');
                     res.body.should.have.property('message').eql('Please specify an authorization header');
                     done();
@@ -54,7 +52,7 @@ describe('Team', () => {
                 .post('/api/v1/fixture/team/:slug')
                 .send(team)
                 .end((err, res) => {
-                    res.should.have.status(status.notfound);
+                    res.should.have.status("not found");
                     res.body.should.be.a('object');
                     done();
                 });
@@ -66,7 +64,7 @@ describe('Team', () => {
             chai.request(server)
                 .delete('/api/v1/team/delete/:slug')
                 .end((err, res) => {
-                    res.should.have.status(status.unauthorized);
+                    res.should.have.status("not authorized");
                     res.body.should.be.a('object');
                     done();
                 });
@@ -78,7 +76,7 @@ describe('Team', () => {
             chai.request(server)
                 .delete('/api/v1/fixture/edit/:slug')
                 .end((err, res) => {
-                    res.should.have.status(status.notfound);
+                    res.should.have.status("not found");
                     res.body.should.be.a('object');
                     done();
                 });

@@ -5,8 +5,6 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../server');
 const should = chai.should();
-const status = require('../app/helpers/statuses');
-const messages = require('../app/helpers/messages');
 
 chai.use(chaiHttp);
 should;
@@ -35,7 +33,7 @@ describe('Fixture', () => {
                 .post('/api/v1/fixture/add')
                 .send(fixture)
                 .end((err, res) => {
-                    res.should.have.status(status.unauthorized);
+                    res.should.have.status("unauthorized");
                     res.body.should.be.a('object');
                     res.body.should.have.property('message').eql('Please specify an authorization header');
                     done();
@@ -58,7 +56,7 @@ describe('Fixture', () => {
                 .post('/api/v1/fixture/update/:slug')
                 .send(fixture)
                 .end((err, res) => {
-                    res.should.have.status(status.notfound);
+                    res.should.have.status("notfound");
                     res.body.should.be.a('object');
                     done();
                 });
@@ -70,7 +68,7 @@ describe('Fixture', () => {
             chai.request(server)
                 .delete('/api/v1/fixture/delete/:slug')
                 .end((err, res) => {
-                    res.should.have.status(status.unauthorized);
+                    res.should.have.status("unauthorized");
                     res.body.should.be.a('object');
                     done();
                 });
@@ -82,7 +80,7 @@ describe('Fixture', () => {
             chai.request(server)
                 .delete('/api/v1/fixture/edit/:slug')
                 .end((err, res) => {
-                    res.should.have.status(status.notfound);
+                    res.should.have.status("notfound");
                     res.body.should.be.a('object');
                     done();
                 });

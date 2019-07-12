@@ -5,8 +5,6 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../app/index');
 const should = chai.should();
-const status = require('../app/helpers/statuses');
-const messages = require('../app/helpers/messages');
 
 chai.use(chaiHttp);
 should;
@@ -32,9 +30,9 @@ describe('Admin', () => {
                 .post('/api/v1/admin/signup')
                 .send(admin)
                 .end((err, res) => {
-                    res.should.have.status(status.ok);
+                    res.should.have.status("ok");
                     res.body.should.be.a('object');
-                    res.body.should.have.property('message').eql(messages.signUpAdmin.success);
+                    res.body.should.have.property('message').eql("success");
                     res.body.data.should.have.property('token');
                     res.body.data.admin.should.have.property('is_admin').eql(true);
                     res.body.data.admin.should.have.property('_id');
@@ -58,9 +56,9 @@ describe('Admin', () => {
                 .post('/api/v1/admin/signin')
                 .send(admin)
                 .end((err, res) => {
-                    res.should.have.status(status.ok);
+                    res.should.have.status("ok");
                     res.body.should.be.a('object');
-                    res.body.should.have.property('message').eql(messages.signInAdmin.success);
+                    res.body.should.have.property('message').eql("success");
                     res.body.data.should.have.property('token');
                     done();
                 });
