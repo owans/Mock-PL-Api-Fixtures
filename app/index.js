@@ -12,19 +12,26 @@ const FixtureRoute = require('../app/routes/fixtureRoute');
 const SeedRoute = require('../app/routes/seedRoute');
 
 
-mongoose.connect(`${env.mongodb_url}`, {useNewUrlParser: true, useCreateIndex: true})
-                .then(() => {
-                    console.log('Database successfully connected');
+mongoose
+  .connect(`${env.mongodb_url}`, {useNewUrlParser: true, useCreateIndex: true})
+  .then(() => {
+    console.log('Database successfully connected');
 
-                })
-                .catch(err => {
-                    console.error('error occurred while connecting to the db');
-                });
+        })
+        .catch(err => {
+            console.error('error occurred while connecting to the db');
+        });
 
 
 
 // Add middleware for parsing URL encoded bodies
 app.use(cors());
+
+//logger middleware
+app.use((req, res,next) => {
+  console.log(`[${new Date().toTimeString()}]: ${req.method} ${req.url}`)
+  next();
+})
 
 // Add middleware for parsing JSON
 app.use(express.urlencoded({ extended: false }));
