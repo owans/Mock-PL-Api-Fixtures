@@ -1,8 +1,4 @@
 const TeamsModel = require('../models/teamModel');
-const status = require('../helpers/statuses');
-const messages = require('../helpers/messages');
-const errorCodes = require('../helpers/errorCodes');
-
 
 const addTeams = async (req, res) => {
     try {
@@ -10,22 +6,22 @@ const addTeams = async (req, res) => {
         const response = team.toJSON();
 
         res.status(200).json({
-            status: status.ok,
-            message: messages.addTeam.success,
+            status: "Success",
+            message: "Teams successfully added",
             data: { team: response },
         });
     } catch (err) {
         console.log(err);
 
-        if (err.code === errorCodes.duplicateCode){
+        if (err.code === 11000){
             res.status(409).json({
-                status: status.conflict,
-                message: messages.addTeam.duplicateTeam
+                status: "Error",
+                message: "An error occurred, Already exists"
             });
         } else {
             res.status(500).json({
-                status: status.error,
-                message: messages.addTeam.error
+                status: "An error occurred",
+                message: "An error occurred while adding teams"
             });
         }
     }
@@ -38,28 +34,28 @@ const editTeams = async (req, res) => {
         const team = await TeamsModel.findOne({slug: teamSlug}, (err, team) => {
             if (err) {
                 res.status(404).json({
-                    status: status.notfound,
-                    message: messages.editTeam.notfound
+                    status: "Error",
+                    message: "An error occurred, Team does not exists"
                 })
             }
         });
         if (!team) {
             res.status(404).json({
-                status: status.notfound,
-                message: messages.editTeam.notfound
+                status: "Error",
+                message: "An error occurred, Team does not exists"
             })
         }
         res.status(200).json({
-            status: status.ok,
-            messages: messages.editTeam.success,
+            status: "Success",
+            messages: "Team successfully edited",
             data: {team}
         });
     } catch (err) {
         console.log(err);
 
         res.status(500).json({
-            status: status.error,
-            message: messages.editTeam.error
+            status: "Error",
+            message: "An error occurred while trying edit teams"
         });
     }
 };
@@ -69,21 +65,21 @@ const viewTeams = async (req, res) => {
         const teams = await TeamsModel.find();
         if (!teams) {
             res.status(404).json({
-                status: status.notfound,
-                message: messages.viewTeam.notfound
+                status: "Error",
+                message: "An error occurred, no teams to view"
             })
         }
         res.status(200).json({
-            status: status.ok,
-            message: messages.viewTeam.success,
+            status: "Success",
+            message: "Team found successfully",
             data: {teams}
         });
     } catch (err) {
         console.log(err);
 
         res.status(500).json({
-            status: status.error,
-            message: messages.viewTeam.error
+            status: "Error",
+            message: "An error occurred"
         });
     }
 };
@@ -94,15 +90,15 @@ const updateTeams = async (req, res) => {
         const team = await TeamsModel.findOne({slug: teamSlug}, (err, team) => {
             if (err) {
                 res.status(404).json({
-                    status: status.notfound,
-                    message: messages.editTeam.notfound
+                    status: "Error",
+                    message: "An error occurred, team not found"
                 })
             }
         });
         if (!team) {
             res.status(404).json({
-                status: status.notfound,
-                message: messages.updateTeam.notfound
+                status: "Error",
+                message: "An error occurred while trying to update teams"
             })
         } else {
             team.team_name = req.body.team_name;
@@ -113,16 +109,16 @@ const updateTeams = async (req, res) => {
             team.save();
         }
         res.status(200).json({
-            status: status.ok,
-            messages: messages.updateTeam.success,
+            status: "Success",
+            messages: "Successfully updated teams",
             data: {team}
         });
     } catch (err) {
         console.log(err);
 
         res.status(500).json({
-            status: status.error,
-            message: messages.updateTeam.error
+            status: "Success",
+            message: "An error occurred"
         });
     }
 };
@@ -133,29 +129,29 @@ const searchTeams =  async (req, res) => {
         const team = await TeamsModel.findOne({team_name: teamName}, (err, team) => {
             if (err) {
                 res.status(404).json({
-                    status: status.notfound,
-                    message: messages.viewTeam.notfound
+                    status: "Error",
+                    message: "An error occurred, team not found"
                 })
             }
         });
 
         if (team === undefined || team === null ) {
             res.status(404).json({
-                status: status.notfound,
-                message: messages.viewTeam.notfound
+                status: "Error",
+                message: "An error occurred no teams found"
             })
         }
         res.status(200).json({
-            status: status.ok,
-            message: messages.viewTeam.success,
+            status: "Success",
+            message: "Successfully found teams",
             data: {team}
         });
     } catch (err) {
         console.log(err);
 
         res.status(500).json({
-            status: status.error,
-            message: messages.viewTeam.error
+            status: "Error",
+            message: "An error occurred, no teams found"
         });
     }
 };
@@ -166,38 +162,38 @@ const removeTeams = async (req, res) => {
         const findTeam = await TeamsModel.findOne({slug: teamSlug}, (err, team) => {
             if (err) {
                 res.status(404).json({
-                    status: status.notfound,
-                    message: messages.editTeam.notfound
+                    status: "Error",
+                    message: "An error occurred, teams not found"
                 })
             }
         });
         if (!findTeam) {
             res.status(404).json({
-                status: status.notfound,
-                message: messages.updateTeam.notfound
+                status: "Error",
+                message: "An error occurred while trying to update teams"
             })
         }
 
         const team = await TeamsModel.findOneAndDelete({slug: teamSlug}, (err, team) => {
             if (err) {
                 res.status(404).json({
-                    status: status.notfound,
-                    message: messages.editTeam.notfound
+                    status: "Error",
+                    message: "Successfully edited teams"
                 })
             }
         });
         if (!team) {
             res.status(200).json({
-                status: status.ok,
-                message: messages.removeTeam.success
+                status: "Success",
+                message: "Successfully deleted teams"
             })
         }
     } catch (err) {
         console.log(err);
 
         res.status(500).json({
-            status: status.error,
-            message: messages.removeTeam.error
+            status: "Error",
+            message: "An error occurred while trying to remove teams"
         });
     }
 };

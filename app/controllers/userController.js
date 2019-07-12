@@ -2,9 +2,6 @@ const UsersModel = require('../models/userModel');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const env = require('../../env');
-const status = require('../helpers/statuses');
-const messages = require('../helpers/messages');
-const errorCodes = require('../helpers/errorCodes');
 
 const signUpUser = async (req, res) => {
     try {
@@ -16,21 +13,21 @@ const signUpUser = async (req, res) => {
 
         const token = jwt.sign({ id: user.id }, env.secret, { expiresIn: '1h' });
         res.status(200).json({
-            status: status.ok,
-            message: messages.signUp.success,
+            status: "Success",
+            message: "Successfully signed up",
             data: { user: response, token }
         });
     } catch (err) {
         console.log(err.code);
-        if (err.code === errorCodes.duplicateCode){
+        if (err.code === 11000){
             res.status(409).json({
-                status: status.conflict,
-                message: messages.signUp.duplicateEmail
+                status: "Error",
+                message: "An error occurred, user already exists"
             });
         } else {
             res.status(500).json({
-                status: status.error,
-                message: messages.signUp.error
+                status: "Error",
+                message: "An error occurred while trying to sign up"
             });
         }
 
@@ -48,7 +45,7 @@ const signInUser = async (req, res) => {
         if (!user)
             return res
                 .status(404)
-                .json({ status: status.notfound, message: messages.signIn.notfound });
+                .json({ status: "Error", message: "User not found" });
 
         const isPasswordValid = await bcrypt.compare(
             req.body.password,
@@ -58,12 +55,12 @@ const signInUser = async (req, res) => {
         if (!isPasswordValid)
             return res
                 .status(401)
-                .json({ status: status.unauthorized, message: messages.signIn.invalid });
+                .json({ status: "Error", message: "An error occurred, username or password invalid" });
 
         const token = jwt.sign({ id: user.id }, env.secret);
-        res.json({status: status.ok, message: messages.signIn.success, data: { token }});
+        res.json({status: "Success", message: "Sign in successfull", data: { token }});
     } catch (err) {
-        res.status(500).json({ status: status.error, message: messages.signIn.error });
+        res.status(500).json({ status:  "Error", message: "An error occurred, username or password invalid" });
     }
 };
 

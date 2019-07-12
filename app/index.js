@@ -3,28 +3,33 @@ const dotenv = require('dotenv');
 dotenv.config();
 const app = express();
 const cors = require('cors');
-const env = require('./env');
+const mongoose = require('mongoose');
+const env = require('../env');
 const UsersRoute = require('../app/routes/userRoute');
 const AdminsRoute = require('../app/routes/adminRoute');
 const TeamRoute = require('../app/routes/teamRoute');
 const FixtureRoute = require('../app/routes/fixtureRoute');
 const SeedRoute = require('../app/routes/seedRoute');
 
-const dbConnect = require('../app/db/dbConnection');
-const morgan = require('morgan');
 
-//don't show the log when it is test
-if(env.environment !== 'test') {
-  //use morgan to log at command line
-  app.use(morgan('combined')); //'combined' outputs the Apache style LOGs
-}
+mongoose.connect(`${env.mongodb_url}`, {useNewUrlParser: true, useCreateIndex: true})
+                .then(() => {
+                    console.log('Database successfully connected');
 
-// Add middleware for parsing URL encoded bodies (which are usually sent by browser)
+                })
+                .catch(err => {
+                    console.error('error occurred while connecting to the db');
+                });
+
+
+
+// Add middleware for parsing URL encoded bodies
 app.use(cors());
 
-// Add middleware for parsing JSON and urlencoded data and populating `req.body`
+// Add middleware for parsing JSON
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
 app.use('/api/v1', UsersRoute);
 app.use('/api/v1', AdminsRoute);
 app.use('/api/v1',  TeamRoute);
@@ -34,7 +39,7 @@ app.use('/api/v1',  SeedRoute);
 
 
 app.listen(env.port).on('listening', () => {
-  console.log('🚀 are live on ' + env.port);
+  console.log('we are live on ' + env.port);
 });
 
 

@@ -1,7 +1,4 @@
 const FixtureModel = require('../models/fixtureModel');
-const status = require('../helpers/statuses');
-const messages = require('../helpers/messages');
-const errorCodes = require('../helpers/errorCodes');
 
 const addFixtures = async (req, res) => {
     try {
@@ -9,21 +6,21 @@ const addFixtures = async (req, res) => {
         const response = fixture.toJSON();
 
         res.status(200).json({
-            status: status.ok,
-            message: messages.addFixture.success,
+            status: "ok",
+            message: "Fixture created successfully",
             data: { fixture: response },
         });
     } catch (err) {
         console.log(err);
-        if (err.code === errorCodes.duplicateCode){
+        if (err.code === 11000){
             res.status(409).json({
-                status: status.conflict,
-                message: messages.addFixture.duplicateFixture
+                status: "Error",
+                message: "Fixture already exists"
             });
         } else {
             res.status(500).json({
-                status: status.error,
-                message: messages.addFixture.error
+                status: "Error",
+                message: "An error occurred while trying to create a fixture"
             });
         }
 
@@ -37,28 +34,28 @@ const editFixtures = async (req, res) => {
         const fixture = await FixtureModel.findOne({slug: fixtureSlug}, (err, fixture) => {
             if (err) {
                 res.status(404).json({
-                    status: status.notfound,
-                    message: messages.editFixture.notfound
+                    status: "Error",
+                    message: "Fixture does not exist"
                 })
             }
         });
         if (!fixture) {
             res.status(404).json({
-                status: status.notfound,
-                message: messages.editFixture.notfound
+                status: "Error",
+                message: "Fixture does not exist"
             })
         }
         res.status(200).json({
-            status: status.ok,
-            messages: messages.editFixture.success,
+            status: "Success",
+            messages: "fixture edited successfully",
             data: {fixture}
         });
     } catch (err) {
         console.log(err);
 
         res.status(500).json({
-            status: status.error,
-            message: messages.editFixture.error
+            status: "Error",
+            message: "Fixture does not exist"
         });
     }
 };
@@ -69,21 +66,21 @@ const pendingFixtures =  async (req, res) => {
 
         if (fixtures === undefined || fixtures.length === 0) {
             res.status(404).json({
-                status: status.notfound,
-                message: messages.pendingFixture.notfound
+                status: "Error",
+                message: "Pending fixtures not found"
             })
         }
         res.status(200).json({
-            status: status.ok,
-            message: messages.pendingFixture.success,
+            status: "Success",
+            message: "Pending fixtures found!!",
             data: {fixtures}
         });
     } catch (err) {
         console.log(err);
 
         res.status(500).json({
-            status: status.error,
-            message: messages.pendingFixture.error
+            status: "Error",
+            message: "An error occurred"
         });
     }
 };
@@ -95,21 +92,21 @@ const searchFixtures =  async (req, res) => {
 
         if (fixtures === undefined || fixtures.length === 0) {
             res.status(404).json({
-                status: status.notfound,
-                message: messages.viewFixture.notfound
+                status: "Error",
+                message: "No fixtures found"
             })
         }
         res.status(200).json({
-            status: status.ok,
-            message: messages.viewFixture.success,
+            status: "Success",
+            message: 'Successfully found fixtures',
             data: {fixtures}
         });
     } catch (err) {
         console.log(err);
 
         res.status(500).json({
-            status: status.error,
-            message: messages.viewFixture.error
+            status: "Error",
+            message: "An error occurred"
         });
     }
 };
@@ -119,22 +116,22 @@ const completedFixtures =  async (req, res) => {
         const fixtures = await FixtureModel.find({match_status: 'completed'});
         if (fixtures === undefined || fixtures.length === 0) {
             res.status(404).json({
-                status: status.notfound,
-                message: messages.viewFixture.notfound
+                status: "Error",
+                message: "An error occurred, no fixtures found"
             })
         }
 
         res.status(200).json({
-            status: status.ok,
-            message: messages.viewFixture.success,
+            status: "Success",
+            message: "Fixtures found successfully",
             data: {fixtures}
         });
     } catch (err) {
         console.log(err);
 
         res.status(500).json({
-            status: status.error,
-            message: messages.viewFixture.error
+            status: "Error",
+            message: "An error occurred"
         });
     }
 };
@@ -144,21 +141,21 @@ const viewFixtures = async (req, res) => {
         const fixtures = await FixtureModel.find();
         if (!fixtures) {
             res.status(404).json({
-                status: status.notfound,
-                message: messages.viewFixture.notfound
+                status: "Error",
+                message: "Fixtures not found"
             })
         }
         res.status(200).json({
-            status: status.ok,
-            message: messages.viewFixture.success,
+            status: "Success",
+            message: "You can now view fixtures",
             data: {fixtures}
         });
     } catch (err) {
         console.log(err);
 
         res.status(500).json({
-            status: status.error,
-            message: messages.viewFixture.error
+            status: "Error",
+            message: "An error occurred"
         });
     }
 };
@@ -169,15 +166,15 @@ const updateFixtures = async (req, res) => {
         const fixture = await FixtureModel.findOne({slug: fixtureSlug}, (err, fixture) => {
             if (err) {
                 res.status(404).json({
-                    status: status.notfound,
-                    message: messages.editFixture.notfound
+                    status: "Error",
+                    message: "An error occured while trying to edit fixtures"
                 })
             }
         });
         if (!fixture) {
             res.status(404).json({
-                status: status.notfound,
-                message: messages.updateFixture.notfound
+                status: "Error",
+                message: "An error occured"
             })
         } else {
             fixture.home_team = req.body.home_team;
@@ -193,16 +190,16 @@ const updateFixtures = async (req, res) => {
             fixture.save();
         }
         res.status(200).json({
-            status: status.ok,
-            messages: messages.updateTeam.success,
+            status: "Success",
+            messages: "Teams updated successfully",
             data: {fixture}
         });
     } catch (err) {
         console.log(err);
 
         res.status(500).json({
-            status: status.error,
-            message: messages.updateTeam.error
+            status: "Error",
+            message: "An error occurred"
         });
     }
 };
@@ -214,30 +211,30 @@ const removeFixtures = async (req, res) => {
         const findFixture = await FixtureModel.findOne({slug: fixtureSlug}, (err, fixture) => {
             if (err) {
                 res.status(404).json({
-                    status: status.notfound,
-                    message: messages.editFixture.notfound
+                    status: "Error",
+                    message: "An error occurred"
                 })
             }
         });
         if (!findFixture) {
             res.status(404).json({
-                status: status.notfound,
-                message: messages.updateFixture.notfound
+                status: "Error",
+                message: "An error occurred"
             })
         }
 
         const fixture = await FixtureModel.findOneAndDelete({slug: fixtureSlug}, (err, fixture) => {
             if (err) {
                 res.status(404).json({
-                    status: status.notfound,
-                    message: messages.editFixture.notfound
+                    status:  "Error",
+                    message: "An error occurred"
                 })
             }
         });
         if (!fixture) {
             res.status(200).json({
-                status: status.ok,
-                message: messages.removeFixture.success
+                status: "Success",
+                message: "Successfully removed fixtures"
             })
         }
 
@@ -245,8 +242,8 @@ const removeFixtures = async (req, res) => {
         console.log(err);
 
         res.status(500).json({
-            status: status.error,
-            message: messages.removeFixture.error
+            status: "Error",
+            message: "An error occurred while trying to remove fixtures"
         });
     }
 };

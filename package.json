@@ -37,9 +37,7 @@
     "morgan": "^1.9.1",
     "nodemon": "^1.19.1",
     "path-to-regexp": "^3.0.0",
-    "redis": "^2.8.0",
     "superagent": "^5.1.0",
-    "supertest": "^4.0.2",
-    "url": "^0.11.0"
+    "supertest": "^4.0.2"
   }
 }

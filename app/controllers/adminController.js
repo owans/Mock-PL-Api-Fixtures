@@ -1,8 +1,5 @@
 const AdminsModel = require('../models/adminModel');
-const status = require('../helpers/statuses');
-const messages = require('../helpers/messages');
-const errorCodes = require('../helpers/errorCodes');
-const validation = require('../helpers/validations');
+const validation = require('../middlewares/validations');
 
 
 const signUpAdmin = async (req, res) => {
@@ -26,21 +23,21 @@ const signUpAdmin = async (req, res) => {
             response.is_admin
         );
         res.status(200).json({
-            status: status.ok,
-            message: messages.signUpAdmin.success,
+            status: "Success",
+            message: "Successfully signed up as an admin",
             data: { admin: response, token }
         });
     } catch (err) {
         console.log(err);
-        if (err.code === errorCodes.duplicateCode){
+        if (err.code === 11000){
             res.status(409).json({
-                status: status.conflict,
-                message: messages.signUpAdmin.duplicateEmail
+                status: "Error",
+                message: "An error occurred this user already exists"
             });
         } else {
             res.status(500).json({
-                status: status.error,
-                message: messages.signUpAdmin.error
+                status: "Error",
+                message: "An error occurred while signing up"
             });
         }
 
@@ -60,8 +57,8 @@ const signInAdmin = async (req, res) => {
             return res
                 .status(404)
                 .json({
-                    status: status.notfound,
-                    message: messages.signInAdmin.notfound
+                    status: "Error",
+                    message: "Admin not found"
                 });
 
         const isPasswordValid = await validation.comparePassword(
@@ -73,8 +70,8 @@ const signInAdmin = async (req, res) => {
             return res
                 .status(401)
                 .json({
-                    status: status.unauthorized,
-                    message: messages.signInAdmin.invalid
+                    status: "Error",
+                    message: "An error occurred"
                 });
         const response = admin.toJSON();
         const token = validation.generateAdminToken(
@@ -83,12 +80,12 @@ const signInAdmin = async (req, res) => {
             response.is_admin
         );
         res.json({
-            status: status.ok,
-            message: messages.signInAdmin.success,
+            status: "Success",
+            message: "Successfully signed in",
             data: { token }
         });
     } catch (err) {
-        res.status(500).json({ status: status.error, message: messages.signInAdmin.error });
+        res.status(500).json({ status: "Error", message: "An error occurred" });
     }
 };
 
