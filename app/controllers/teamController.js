@@ -125,7 +125,7 @@ const updateTeams = async (req, res) => {
 
 const searchTeams =  async (req, res) => {
     try {
-        const teamName = req.body.team_name.toLowerCase()
+        const teamName = req.body.team_name;
         const team = await TeamsModel.findOne({team_name: teamName}, (err, team) => {
             if (err) {
                 res.status(404).json({
@@ -155,6 +155,7 @@ const searchTeams =  async (req, res) => {
         });
     }
 };
+
 
 const removeTeams = async (req, res) => {
     try {

@@ -10,6 +10,7 @@ const AdminsRoute = require('../app/routes/adminRoute');
 const TeamRoute = require('../app/routes/teamRoute');
 const FixtureRoute = require('../app/routes/fixtureRoute');
 const SeedRoute = require('../app/routes/seedRoute');
+const searchRoute = require('../app/routes/searchRoute');
 
 
 mongoose
@@ -42,6 +43,7 @@ app.use('/api/v1', AdminsRoute);
 app.use('/api/v1',  TeamRoute);
 app.use('/api/v1',  FixtureRoute);
 app.use('/api/v1',  SeedRoute);
+app.use('/api/v1',  searchRoute);
 
 
 

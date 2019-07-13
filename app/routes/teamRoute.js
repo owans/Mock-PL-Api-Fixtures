@@ -15,7 +15,6 @@ router.delete('/team/delete/:slug', AdminAuth, TeamController.removeTeams);
 
 // User Teams Route
 router.get('/user/teams', UserAuth, TeamController.viewTeams);
-router.get('/user/team/search', UserAuth,  TeamController.searchTeams);
 
 
 module.exports = router;

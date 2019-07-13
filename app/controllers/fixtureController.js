@@ -87,7 +87,7 @@ const pendingFixtures =  async (req, res) => {
 
 const searchFixtures =  async (req, res) => {
     try {
-        const teamName = req.body.team_name.toLowerCase()
+        const teamName = req.body.team_name;
         const fixtures = await FixtureModel.find({$or: [ { home_team: teamName }, { away_team: teamName}]});
 
         if (fixtures === undefined || fixtures.length === 0) {

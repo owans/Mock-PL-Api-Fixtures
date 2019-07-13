@@ -30,7 +30,6 @@ const TeamsSchema = new Schema({
         default: Date.now,
     }
 
-
 });
 
 function slugify(teamName) {

@@ -13,7 +13,6 @@ router.delete('/fixture/delete/:slug', AdminAuth, FixtureController.removeFixtur
 // User Fixture Routes
 router.get('/pending/fixtures', UserAuth,  FixtureController.pendingFixtures);
 router.get('/completed/fixtures', UserAuth,  FixtureController.completedFixtures);
-router.get('/search/fixtures', UserAuth, FixtureController.searchFixtures);
 
 module.exports = router;
 
